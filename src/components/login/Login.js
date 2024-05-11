@@ -12,7 +12,7 @@ function Login() {
   let [err,setErr]=useState("")
   let {register,handleSubmit,formState:{errors},}=useForm();
   let submitForm=(adduser)=>{
-    console.log(adduser);
+    // console.log(adduser);
     loginUser(adduser);
     };
     useEffect(()=>{

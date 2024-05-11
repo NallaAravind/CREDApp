@@ -18,7 +18,7 @@ function Userloginstore({ children }) {
                     localStorage.setItem("token",res.data.token)
                     console.log("Navigated to userprofile");
                     setUser({ ...res.data.user });
-                    console.log(currentuser);
+                    // console.log(currentuser);
                     setErr("");
                     setUserLoginStatus(true);
                 } else {

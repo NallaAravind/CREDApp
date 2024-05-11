@@ -9,7 +9,7 @@ const verifyToken =(request,response,next)=>{
     else{
         const token =bearertoken.split(" ")[1];
         try{
-            jwttoken.verify(token,process.env.secret_key);
+            jwttoken.verify(token,"abcd");
             // console.    log(token);
             next();
         }

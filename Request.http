@@ -1,6 +1,7 @@
-GET http://localhost:3500/userApp/users
+GET http://localhost:3500/userApp/user
 ###
-GET http://localhost:3500/userApp/users/200
+
+GET http://localhost:3500/userApp/user/Aravind
 
 ###
 GET http://localhost:3500/userApp/get-users/Aravind
@@ -10,9 +11,10 @@ POST http://localhost:3500/userApp/register
 Content-Type: application/json
 
 {
-    "username":"Aravind",
-    "email":"nallaaravindreddy45@gmail.com",
-    "password":"Aravind123@"
+    "name":"Amar",
+    "email":"Amar",
+    "dob":"10/05/2024",
+    "password":"Amar"
 }
 
 ###
@@ -21,8 +23,9 @@ POST http://localhost:3500/userApp/login
 Content-Type: application/json
 
 {
-   "username":"saiteja",
-    "password":"sai"
+   "email":"Amar",
+    "password":"Amar"
+
 }
 
 ###
@@ -39,7 +42,18 @@ Content-Type: application/json
 
 
 ###
-DELETE http://localhost:3500/userApp/delete-users/nallaamarendhar@gmail.com
+DELETE http://localhost:3500/userApp/delete
+Content-Type: application/json
+
+{
+   "email":"Amar",
+    "password":"Amar"
+
+}
+
+
+
+
 
 
 ###

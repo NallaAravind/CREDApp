@@ -7,11 +7,12 @@ const multerObj=require('./middleware/cloudinartconfig');
 const jwt=require("jsonwebtoken");
 const expressAsyncHandler=require("express-async-handler");
 const verifyToken = require("./middleware/verifyToken");
-userApp.get('/users',expressAsyncHandler( async (request,response)=>{
+userApp.get('/user',expressAsyncHandler( async (request,response)=>{
     // response.send({message:"get all users",payload:users});
     const userCollection=request.app.get("userCollection");
    
         let dbRes=await userCollection.find().toArray()
+        console.log(dbRes)
     response.status(201).send({message:"Users details displayed",payload:dbRes})
      // try{
     // }catch(err){
@@ -27,16 +28,15 @@ userApp.get('/users',expressAsyncHandler( async (request,response)=>{
     // })
 
 }));
-userApp.get('/users/:id',expressAsyncHandler(async (request,response,next)=>{
+userApp.get('/user/:name',expressAsyncHandler(async (request,response,next)=>{
     // let userid=+request.params.id
     // let user=users.find(((userobj)=>userobj.id===userid))
     // response.send({message:"the details of users id",payload:users});
     // console.log(user)
     const userCollection=request.app.get("userCollection");
-    let userid=(+request.params.id) 
-    // try{
-        const getid=await userCollection.findOne({id:userid})
-    response.status(201).send({message:"User id details",payload:getid})
+    let newuser=(request.params.name);
+    const delt= await userCollection.deleteOne({name:newuser})
+    response.status(201).send({message:"User id details",payload:delt})
     // }
     // catch(err){
     //     next(err)
@@ -51,10 +51,10 @@ userApp.get('/users/:id',expressAsyncHandler(async (request,response,next)=>{
     // })
 
 }));
-userApp.get('/get-users/:username',expressAsyncHandler(async(request,response)=>{
+userApp.get('/get-users/:name',expressAsyncHandler(async(request,response)=>{
     const userCollection =request.app.get("userCollection");
-    let newuser=(request.params.username);
-    let userObj =await userCollection.findOne({username:newuser});
+    let newuser=(request.params.name);
+    let userObj =await userCollection.findOne({name:newuser});
     if (userObj===null){
         response.status(201).send({message:" user details not found",payload:userObj});
     }
@@ -83,29 +83,34 @@ userApp.post('/login',expressAsyncHandler(async(request,response)=>{
         }
         else{
             // response.sta
-            const webtoken =jwt.sign({username:userObj.username},process.env.secret_key,{expiresIn:40000});
-            console.log(userObj);
+            const webtoken =jwt.sign({username:userObj.username},"abcd",{expiresIn:40000});
             response.status(201).send({message:"success",token:webtoken,user:userObj})
         }
     }
 }))
-userApp.post('/register',multerObj.single('photo'),expressAsyncHandler(async (request,response,next)=>{
-   
-    const userCollection=request.app.get("userCollection");
-    const newuser=JSON.parse(request.body.user);
-        let userObj= await userCollection.findOne({name:newuser.name});
-        if (userObj!=null){
-            response.status(200).send({message:"user already created"});
-        }
-        else{
-            newuser.image=request.file.path
-            let hashed=await bcrypt.hash(newuser.password,5);
-            newuser.password=hashed;
-        await userCollection.insertOne(newuser)
-        response.status(201).send({message:"User id created"});
-        }
+userApp.post('/register', multerObj.single('photo'), expressAsyncHandler(async (request, response, next) => {
+    try {
+        // multerObj.single('photo'),
+        const userCollection = request.app.get("userCollection");
+        const newuser = JSON.parse(request.body.user);
+        // console.log(newuser)
+        const userObj = await userCollection.findOne({name:newuser.name});
 
+        if (userObj!==null) {
+            response.status(200).send({ message: "User already created" });
+        } else {
+            newuser.image = request.file.path;
+            let hashed = await bcrypt.hash(newuser.password, 5);
+            newuser.password = hashed;
+            await userCollection.insertOne(newuser);
+            response.status(201).send({ message: "User created" });
+        }
+    } catch (err) {
+        console.error("Error:", err);
+        return response.status(500).send({ message: "Internal server error" });
+    }
 }));
+
 // const multerObj = multer({ dest: 'uploads/' }); // Assuming 'uploads/' is the directory to store uploaded images
 
 // userApp.post('/register', multerObj.single('photo'), expressAsyncHandler(async (request, response, next) => {
@@ -155,26 +160,24 @@ userApp.put('/update-users',expressAsyncHandler(async (request,response,next)=>{
     //     response.send({message:"Error",errMessage:err.message});
     // })
 }));
-userApp.delete('/delete-users/:name',expressAsyncHandler(async (request,response,next)=>{
-    const userCollection=request.app.get("userCollection");
-    let newuser="saiteja"
-    // try{
-        const delt= await userCollection.deleteOne({name:newuser})
-    response.status(201).send({message:"User is deleted"})
-    // }
-    // catch(err){ 
-    //     // response.send({err:err.message});
-    //     next(err)
-    // }
-    // .then((userObj)=>{
-    //     response.status(201).send({message:"User removed"});
-    // })
-    // .catch((err)=>{
-    //     console.log("err in user creation",err);
-    //     response.send({message:"Error",errMessage:err.message});
-    // })
-}));
+// userApp.delete('/delet',expressAsyncHandler(async (request,response,next)=>{
+//     const userCollection=request.app.get("userCollection");
+//     const newuser=(request.body);
+//     // try{
+//         console.log("delete ")
+//         const delt= await userCollection.deleteOne({email:newuser.email})
+//         console.log("delt",delt)
+//     response.status(201).send({message:"User is deleted"})
+    
+// }));
+userApp.delete('/delete',expressAsyncHandler(async(request,response)=>{
 
+    const userCollection=request.app.get("userCollection")
+    const newuser=(request.body)
+    console.log(newuser.email)
+    await userCollection.deleteOne({email:newuser.email})
+    response.status(201).send({message:"User is deleted"})
+}));
 userApp.get('/authenticate',verifyToken,expressAsyncHandler(async(request,response)=>{
     // console.log(request.header);
     response.send("the user details found");
