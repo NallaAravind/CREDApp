@@ -1,0 +1,48 @@
+GET http://localhost:3500/userApp/users
+###
+GET http://localhost:3500/userApp/users/200
+
+###
+GET http://localhost:3500/userApp/get-users/Aravind
+
+###
+POST http://localhost:3500/userApp/register
+Content-Type: application/json
+
+{
+    "username":"Aravind",
+    "email":"nallaaravindreddy45@gmail.com",
+    "password":"Aravind123@"
+}
+
+###
+
+POST http://localhost:3500/userApp/login
+Content-Type: application/json
+
+{
+   "username":"saiteja",
+    "password":"sai"
+}
+
+###
+PUT http://localhost:3500/userApp/update-users
+Content-Type: application/json
+
+
+{
+    "id":500,
+    "name":"Balu",
+    "Age":21
+}
+
+
+
+###
+DELETE http://localhost:3500/userApp/delete-users/nallaamarendhar@gmail.com
+
+
+###
+
+GET http://localhost:3500/userApp/authenticate
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFyYXZpbmQiLCJpYXQiOjE3MTUzMjQzMzgsImV4cCI6MTcxNTM2NDMzOH0.V9UrU0IlHOnJwNzg-iZh-JVry0ffVtQkiwKnf6mUoUw
